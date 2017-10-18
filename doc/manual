@@ -1,0 +1,79 @@
+Notes to the OS:
+--------------------------------
+
+Kernel is located after running "make all" in the code
+directory as file "kernel" and should be saved to the
+directory boot/grub at flash drive.
+
+Grub Installation to Image File:
+---------------------------------
+
+sudo dd if=/dev/zero of=os.img count=120 bs=1M
+sudo cfdisk os.img # erstell Partition mit Id 83 (Linux)
+# answer: add map loop0p1 (252:0): 0 243712 linear /dev/loop0 2048
+sudo kpartx -va os.img
+sudo mkfs.ext2 /dev/mapper/loop0p1
+sudo mount /dev/mapper/loop0p1 mount
+sudo mkdir -p mount/boot/grub
+sudo grub-install --boot-directory=mount/boot/ /dev/loop0
+sudo vim mount/boot/grub/grub.cfg
+	menuentry "Viennice"	{
+		multiboot /boot/kernel
+		boot
+	}
+(wichtig: Leerzeile am Schluss)
+sudo cp kernel mount/boot
+sudo umount mount
+sudo qemu-system-i386 -hda /dev/loop0
+dann entfernen mit
+sudo kpartx -d os.img
+um loop0 und /dev/mapper/loop0p1 zu entferne
+
+Sources:
+refer to: http://unix.stackexchange.com/questions/163791/place-grub-on-virtual-disk
+and: https://ebroder.net/2009/08/04/installing-grub-onto-a-disk-image/
+
+
+
+
+
+Grub Installation to USB flash drive:
+------------------------------
+
+refer to: http://www.gnu.org/software/grub/manual/grub.html#Installation
+and to: http://www.lowlevel.eu/wiki/GRUB_Installation_auf_einem_USB-Stick
+and to: http://www.lowlevel.eu/wiki/GRUB
+
+sudo cfdisk /dev/sdb -> eine große Partition erstellen (primary)
+sudo mkfs.ext2 /dev/sdb1
+sudo mount /dev/sdb1 ~/usb
+sudo mkdir -p ~/usb/boot/grub #notwendige Ordner erstellen
+sudo grub-install --boot-directory=/home/simon/usb/boot/ /dev/sdb #grub auf diesen Datenträger installieren, aber nicht /boot für die Boot-Dateien, sondern /home/simon/usb/boot verwenden (die werden von grub-install dort hineinkopiert)
+
+
+Config file grub.cfg in boot/grub should look like this:
+ 
+verwende stattdessen:
+menuentry "Viennice"	{
+	multiboot /boot/kernel
+	boot
+}
+
+(important is an empty line at end of file!)
+
+
+GRUB on CD - Iso-Image:
+------------------------------
+
+refer to: http://www.gnu.org/software/grub/manual/grub.html#Making-a-GRUB-bootable-CD_002dROM
+
+copy directories of a grub-flash drive to ~/iso
+
+mkdir -p iso/boot/grub
+vim iso/boot/grub/grub.cfg # make the grub.cfg
+cp kernel(elf_file) iso/boot
+grub-mkrescue -o grub.iso iso
+sudo wodim dev=/dev/sr0 grub.iso
+
+How to create an own El-Torito-Image look at: 
+eltorito file in this directory

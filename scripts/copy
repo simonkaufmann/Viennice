@@ -1,0 +1,16 @@
+#!/bin/bash
+
+RUN_DIR=../run/image
+OS_IMG=os.img
+MOUNT_POINT=../run/image/mount/
+KERNEL_DIR=../code/
+KERNEL=kernel
+PARTITION=/dev/mapper/loop0p1
+
+sudo kpartx -va ${RUN_DIR}/${OS_IMG}   # take partitions from image
+sleep 0.1
+sudo mount  ${PARTITION} ${MOUNT_POINT}
+sudo cp ${KERNEL_DIR}/${KERNEL} ${MOUNT_POINT}/boot
+sudo umount ${MOUNT_POINT}
+sudo qemu-system-i386 -hda /dev/loop0
+sudo kpartx -d ${RUN_DIR}/${OS_IMG}

@@ -1,0 +1,18 @@
+
+HOW TO CREATE A EL-TORITO CD-IMAGE IN EMULATING FLOPPY MODE
+-----------------------------------------------------------
+
+refer to: http://wiki.osdev.org/El-Torito
+and to: http://wiki.osdev.org/Bootable_CD
+
+Use an os.bin which contains the boot sector which would usually be saved to 
+a floppy disc.
+
+start with os.bin (size of 512 Bytes = boot sector)
+dd if=/dev/zero bs=512 count=2879 >> os.bin # add some zeros such that the file is 1474560 bytes long (-> a complete floppy image with size of 1.44 MB is necessary)
+
+Create directory like ~/cdimage
+All other files which should be located at CD should be copied to this directory
+Copy os.bin to ~/
+Dann wird ein Isoimage erstellt mit:
+genisoimage -o os.iso -V BOOT_CD -b os.bin cdimage/

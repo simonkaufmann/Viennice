@@ -1,0 +1,20 @@
+#/bin/bash
+
+# to create this usb stick see anleitung!
+#mkdir -p iso/boot/grub
+##vim iso/boot/grub/grub.cfg # make the grub.cfg
+#cp kernel iso/boot
+#grub-mkrescue -o grub.iso iso
+
+
+#sudo mount /dev/sdb1 usb
+sudo cp kernel usb/boot
+#sudo umount /dev/sdb1
+sudo umount usb
+sudo sleep 1 # otherwise sometimes problems occur
+#sudo qemu-system-i386 -hda /dev/sdb # -s -S #-enable-kvm
+sudo qemu-system-i386 -hda /dev/loop2
+#sudo qemu-system-i386 -hda /dev/sdb -enable-kvm -device nec-usb-xhci,id=xhci # enable xhci usb 3.0 controller
+# refer to:
+# http://www.linux-kvm.com/content/qemu-kvm-11-adds-experimental-support-usb-30?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+Kvm-TheLinuxKernel-basedVirtualMachine+%28KVM+-+The+Linux+Kernel-Based+Virtual+Machine%29
+

@@ -1,0 +1,12 @@
+NOTE
+--------------------------------------
+
+Aim of this project is to create a bootable image which can be started using
+Grub. 
+
+For a tutorial see:
+http://www.lowlevel.eu/wiki/Teil_4_-_Hello_World
+
+
+stdarg.h copied from:
+cp /usr/lib/gcc/x86_64-linux-gnu/4.7/include/stdarg
