@@ -600,40 +600,40 @@ void ps2_init()
 	}
 
 	/* reset ps2 devices */
-	if (is_controller1_ok())	{
-		printf("Start resetting Channel 1\n");
-		write_first(0xFF);
-		wait_interrupt();
-		printf("Response PS2 Channel 1: 0x%x\n", value_received);
-		if (value_received == 0xfa)	{
-			printf("PS2 Channel 1 resetted\n");
-			printf("Disable Scanning at Channel 1\n");
-			write_first(0xF5);
-			wait_interrupt();
-			printf("Reaction: 0x%x\n", value_received);
-			if (value_received == 0xaa)	{
-				printf("Reaction was 0xaa so try to get another byte\n");
-				wait_interrupt();
-				printf("Reaction: 0x%x\n", value_received);
-			}
-			if (value_received == 0xfa)	{
-				printf("Device acknowledged (0xfa)\n");
-				printf("Try to identify Channel 1 Device\n");
-				write_first(0xF2);
-				wait_interrupt();
-				printf("Reaction: 0x%x\n", value_received);
-				//if (value_received == 0xfa)	{
-					printf("Device acknowledged, wait for one or two another bytes\n");
-					/* read what is send from keyboard */
-					/* keyboard seems to send very often -> maybe because of resend delay, so that keys pressed forever are recognised more often */
-					while (1)	{
-//						wait_interrupt();
-//						printf("Response was: 0x%x\n", value_received);
-					}
-				//}
-			}
-		}
-	}
+//	if (is_controller1_ok())	{
+//		printf("Start resetting Channel 1\n");
+//		write_first(0xFF);
+//		wait_interrupt();
+//		printf("Response PS2 Channel 1: 0x%x\n", value_received);
+//		if (value_received == 0xfa)	{
+//			printf("PS2 Channel 1 resetted\n");
+//			printf("Disable Scanning at Channel 1\n");
+//			write_first(0xF5);
+//			wait_interrupt();
+//			printf("Reaction: 0x%x\n", value_received);
+//			if (value_received == 0xaa)	{
+//				printf("Reaction was 0xaa so try to get another byte\n");
+//				wait_interrupt();
+//				printf("Reaction: 0x%x\n", value_received);
+//			}
+//			if (value_received == 0xfa)	{
+//				printf("Device acknowledged (0xfa)\n");
+//				printf("Try to identify Channel 1 Device\n");
+//				write_first(0xF2);
+//				wait_interrupt();
+//				printf("Reaction: 0x%x\n", value_received);
+//				//if (value_received == 0xfa)	{
+//					printf("Device acknowledged, wait for one or two another bytes\n");
+//					/* read what is send from keyboard */
+//					/* keyboard seems to send very often -> maybe because of resend delay, so that keys pressed forever are recognised more often */
+//					while (1)	{
+////						wait_interrupt();
+////						printf("Response was: 0x%x\n", value_received);
+//					}
+//				//}
+//			}
+//		}
+//	}
 }
 
 /**

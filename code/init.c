@@ -59,4 +59,8 @@ void init()	{
 			}
 		}
 	}
+
+    printf("\n");
+
+    while(1);
 }
