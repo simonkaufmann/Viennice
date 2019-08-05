@@ -1,37 +1,64 @@
 Notes to the OS:
 --------------------------------
 
-Kernel is located after running "make all" in the code
-directory as file "kernel" and should be saved to the
+File `kernel` is located in the `code` directory after running "make all"
+as file "kernel" and should be saved to the
 directory boot/grub at flash drive.
+
+
+
+
+Dependencies:
+--------------------------------
+
+Tested on Ubuntu 19.04
+
+Install packages:
+kpartx
+qemu
+gcc-multilib (if using system gcc)
+
+
+To instead use self compiled gcc refer to:
+http://wiki.osdev.org/OS_Specific_Toolchain
+
+
+
+
+
+
+
 
 Grub Installation to Image File:
 ---------------------------------
 
 sudo dd if=/dev/zero of=os.img count=120 bs=1M
-sudo cfdisk os.img # erstell Partition mit Id 83 (Linux)
-# answer: add map loop0p1 (252:0): 0 243712 linear /dev/loop0 2048
-sudo kpartx -va os.img
-sudo mkfs.ext2 /dev/mapper/loop0p1
-sudo mount /dev/mapper/loop0p1 mount
+sudo cfdisk os.img # open partition manager to create partition table (DOS) and partition with ID 83 (Linux)
+sudo kpartx -va os.img # save the loopXpY device returned by this command
+sudo mkfs.ext2 /dev/mapper/loop0p1 # enter the loopXpY device returned by kpartx command
+mkdir mount
+sudo mount /dev/mapper/loop0p1 mount # enter the loopXpY device returned by kpartx command
 sudo mkdir -p mount/boot/grub
-sudo grub-install --boot-directory=mount/boot/ /dev/loop0
+sudo grub-install --target=i386-pc --boot-directory=mount/boot/ /dev/loop0 # enter the loopX device without pY returned by kpartx
 sudo vim mount/boot/grub/grub.cfg
 	menuentry "Viennice"	{
 		multiboot /boot/kernel
 		boot
 	}
-(wichtig: Leerzeile am Schluss)
-sudo cp kernel mount/boot
+(important: add empty line at end of this grub.cfg file!)
+sudo cp kernel mount/boot # create the kernel file with make all in `code` directory
 sudo umount mount
-sudo qemu-system-i386 -hda /dev/loop0
-dann entfernen mit
+sudo qemu-system-i386 -hda /dev/loop0 # enter the loopX device returned by kpartx command
+
+Finally remove loop device with:
 sudo kpartx -d os.img
-um loop0 und /dev/mapper/loop0p1 zu entferne
 
 Sources:
 refer to: http://unix.stackexchange.com/questions/163791/place-grub-on-virtual-disk
 and: https://ebroder.net/2009/08/04/installing-grub-onto-a-disk-image/
+
+
+
 
 
 
@@ -61,8 +88,14 @@ menuentry "Viennice"	{
 
 (important is an empty line at end of file!)
 
+Insert flash drive to computer, reboot, enter BIOS menu and select to boot
+from the flash drive.
 
-GRUB on CD - Iso-Image:
+
+
+
+
+GRUB on CD - ISO-Image:
 ------------------------------
 
 refer to: http://www.gnu.org/software/grub/manual/grub.html#Making-a-GRUB-bootable-CD_002dROM
@@ -75,5 +108,15 @@ cp kernel(elf_file) iso/boot
 grub-mkrescue -o grub.iso iso
 sudo wodim dev=/dev/sr0 grub.iso
 
-How to create an own El-Torito-Image look at: 
-eltorito file in this directory
+Insert CD and select in boot menu to boot from CD or use virtual machine
+like VirtualBox, create virtual machine and select ISO image as boot medium.
+
+
+
+
+
+
+How to create an own El-Torito-Image:
+------------------------------
+
+Refer to file `eltorito` in this directory.
