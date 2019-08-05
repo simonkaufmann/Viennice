@@ -1,2 +1,3 @@
 *.o
 code/kernel
+run/image/os.img
