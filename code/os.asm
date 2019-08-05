@@ -51,10 +51,10 @@
 _start: 
 	mov $kernel_stack, %esp
 		
-	mov $'A', %eax
-	mov %eax, 0xb8000;
-	mov $0x07, %eax
-	mov %eax, 0xb8001;
+#	mov $'A', %eax
+#	mov %eax, 0xb8000;
+#	mov $0x07, %eax
+#	mov %eax, 0xb8001;
 
 # init keyboard controller
 # refer to: http://www.lowlevel.eu/wiki/Keyboard_Controller under
