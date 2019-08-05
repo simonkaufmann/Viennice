@@ -1,16 +1,26 @@
 #!/bin/bash
 
+# Image file os.img should be located in `run/image` directory
+# For a description on how to create os.img, refer to 
+# `doc/manual` section `Grub Installation to Image File:`
+
 RUN_DIR=../run/image
 OS_IMG=os.img
 MOUNT_POINT=../run/image/mount/
 KERNEL_DIR=../code/
 KERNEL=kernel
-PARTITION=/dev/mapper/loop0p1
 
 sudo kpartx -va ${RUN_DIR}/${OS_IMG}   # take partitions from image
 sleep 0.1
-sudo mount  ${PARTITION} ${MOUNT_POINT}
+
+OS_LOOP_PARTITION=$(sudo kpartx -l ${RUN_DIR}/${OS_IMG} | sed 's/\s.*$//') # sed to delete everything after first whitespace, should output e.g. loop15p1
+OS_LOOP=$(echo $OS_LOOP_PARTITION | sed 's/p1$//') # delete the p1 for partition 1 at end of loop, should output e.g. loop15
+PARTITION=/dev/mapper/${OS_LOOP_PARTITION}
+
+echo $OS_LOOP
+
+sudo mount ${PARTITION} ${MOUNT_POINT}
 sudo cp ${KERNEL_DIR}/${KERNEL} ${MOUNT_POINT}/boot
 sudo umount ${MOUNT_POINT}
-sudo qemu-system-i386 -hda /dev/loop0
+sudo qemu-system-i386 -hda /dev/${OS_LOOP}
 sudo kpartx -d ${RUN_DIR}/${OS_IMG}

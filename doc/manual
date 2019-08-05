@@ -28,7 +28,6 @@ http://wiki.osdev.org/OS_Specific_Toolchain
 
 
 
-
 Grub Installation to Image File:
 ---------------------------------
 
@@ -52,6 +51,10 @@ sudo qemu-system-i386 -hda /dev/loop0 # enter the loopX device returned by kpart
 
 Finally remove loop device with:
 sudo kpartx -d os.img
+
+Copy the os.img file into folder `run/image` where it can be picked up by
+the `script/copy` script which is used in `make run` when executed from the
+`code` directory.
 
 Sources:
 refer to: http://unix.stackexchange.com/questions/163791/place-grub-on-virtual-disk
