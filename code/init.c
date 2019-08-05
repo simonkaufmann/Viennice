@@ -38,8 +38,8 @@ void println(const char* string);
 void print_int(int number);
 
 void init()	{
-	char Message[] = "----------------------------------------\nVIENNICE\n\nExperimental operating system for x86 systems\n\n(c) Simon Kaufmann, 2019\n----------------------------------------";
-	println(Message);
+	char Message[] = "\n----------------------------------------------------------------------------\n\n                                    VIENNICE\n\n\n     Experimental operating system for x86 systems\n\n     (c) Simon Kaufmann, 2019\n\n----------------------------------------------------------------------------\n";
+	printf(Message);
 
 	gdt_init();
 	idt_init();

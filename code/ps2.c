@@ -548,7 +548,7 @@ static uint8_t wait_interrupt()
 
 void ps2_init()
 {
-	printf("\nPS2 Beginning:\n");
+	printf("\nPS2 Beginning\n");
 	outb(PS2_COMMAND, PS2_CMD_DISABLE_SECOND);
 	outb(PS2_COMMAND, PS2_CMD_DISABLE_FIRST);
 
