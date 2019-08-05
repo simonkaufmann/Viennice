@@ -16,7 +16,6 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "os.h"
 #include "print.h"
 #include "stdarg.h"
@@ -39,7 +38,7 @@ void println(const char* string);
 void print_int(int number);
 
 void init()	{
-	char Message[] = "Operating System - VIENNICE";
+	char Message[] = "----------------------------------------\nVIENNICE\n\nExperimental operating system for x86 systems\n\n(c) Simon Kaufmann, 2019\n----------------------------------------";
 	println(Message);
 
 	gdt_init();
@@ -61,6 +60,3 @@ void init()	{
 		}
 	}
 }
-
-
-
