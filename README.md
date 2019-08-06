@@ -6,7 +6,7 @@ Install packages (tested on Ubuntu 19.04):
 kpartx
 qemu-kvm
 
-Run:  
+Run from root directory of repository:  
 `./scripts/create_grub_image`  
 `cp ./scripts/os.img ./run/image/`  
 `cd code`  
