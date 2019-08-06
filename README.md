@@ -1,4 +1,4 @@
-# Viennice - Small x86-OS project
+# Viennice - x86-OS project
 
 ## Quickstart
 
