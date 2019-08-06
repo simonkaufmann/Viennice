@@ -29,3 +29,8 @@ Look at doc/manual for instructions to create a bootable GRUB flash drive which 
 ## What can the OS do?
 
 Interrupts, keyboard driver and text mode graphic driver are implemented
+
+## Pictures
+
+<img src="doc/pictures/viennice.jpg" width="50%">
+<img src="doc/pictures/grub.png" width="50%">
