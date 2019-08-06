@@ -1,12 +1,26 @@
 # Viennice - Small x86-OS project
 
-## Run the project in emulator
+## Quickstart
 
-If you would like to run the project in qemu emulator, create os.img file
-according to the manual in doc/manual "Grub installation to Image file".
+Install packages (tested on Ubuntu 19.04):
+kpartx
+qemu-kvm
 
-Then go to code directory and execute `make run` (root permissions might be needed because
-the make run tries to automatically mount the image file os.img to copy the kernel file created from c-files)
+Run:
+`./scripts/create_grub_image`
+`cp ./scripts/os.img ./run/image/`
+`cd code`
+`sudo make run`
+
+This will create an os.img file containing a grub bootloader. The `make run`
+command will compile the OS code and copy the kernel image into the boot image
+to be loaded by Grub. The Makefile will also start the qemu emulator and run
+the operating system.
+
+To create a bootable USB stick or CD refer to `doc/manual`
+
+Detailed instructions for this process cna be found in section
+"Grub installation to Image file" in doc/manual
 
 ## Create bootable USB flash drive with the OS
 
