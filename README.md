@@ -32,5 +32,5 @@ Interrupts, keyboard driver and text mode graphic driver are implemented
 
 ## Pictures
 
-<img src="doc/pictures/viennice.jpg" width="50%">
+<img src="doc/pictures/viennice.png" width="50%">
 <img src="doc/pictures/grub.png" width="50%">
