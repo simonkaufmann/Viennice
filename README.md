@@ -2,9 +2,9 @@
 
 ## Quickstart
 
-Install packages (tested on Ubuntu 19.04):
-kpartx
-qemu-kvm
+Install packages (tested on Ubuntu 19.04):  
+kpartx  
+qemu-kvm  
 
 Run from root directory of repository:  
 `./scripts/create_grub_image`  
