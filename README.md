@@ -7,10 +7,10 @@ kpartx
 qemu-kvm
 
 Run:
-`./scripts/create_grub_image`
-`cp ./scripts/os.img ./run/image/`
-`cd code`
-`sudo make run`
+`./scripts/create_grub_image`  
+`cp ./scripts/os.img ./run/image/`  
+`cd code`  
+`sudo make run`  
 
 This will create an os.img file containing a grub bootloader. The `make run`
 command will compile the OS code and copy the kernel image into the boot image
