@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Creates os.img boot image
+
+# Get path of script
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+OS_IMG=os.img
+
+sudo dd if=/dev/zero of=${OS_IMG} count=120 bs=1M
+sudo ${DIR}/partitioning ${OS_IMG}
+sudo kpartx -va ${OS_IMG} # save the loopXpY device returned by this command
+
+sleep 0.1
+
+OS_LOOP_PARTITION=$(sudo kpartx -l ${OS_IMG} | sed 's/\s.*$//') # sed to delete everything after first whitespace, should output e.g. loop15p1
+OS_LOOP=$(echo $OS_LOOP_PARTITION | sed 's/p1$//') # delete the p1 for partition 1 at end of loop, should output e.g. loop15
+PARTITION=/dev/mapper/${OS_LOOP_PARTITION}
+
+if [ "${OS_LOOP}" == "failed" ]; then
+    echo "Error: Mounting ${OS_IMG} using kpartx failed"
+    exit 1
+fi
+
+sudo mkfs.ext2 /dev/mapper/${OS_LOOP_PARTITION} # enter the loopXpY device returned by kpartx command
+
+if [ -e "mount" ]; then
+    echo "Error: file or directory 'mount' already exists"
+    exit 1
+fi
+
+mkdir mount
+sudo mount /dev/mapper/${OS_LOOP_PARTITION} mount # enter the loopXpY device returned by kpartx command
+sudo mkdir -p mount/boot/grub
+sudo grub-install --target=i386-pc --boot-directory=mount/boot/ /dev/${OS_LOOP} # enter the loopX device without pY returned by kpartx
+sudo echo -e "\tmenuentry "Viennice"	{\n" \
+		"\t\tmultiboot /boot/kernel\n" \
+		"\t\tboot\n" \
+	"\t}\n" | sudo tee mount/boot/grub/grub.cfg
+
+sudo umount mount
+sudo rm -r mount
+sudo kpartx -d ${OS_IMG}
+
+echo -e "\n\nFile os.img has been initialised. Please copy now to `run/image/` directory\n\nFINISHED\n"
