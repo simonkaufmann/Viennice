@@ -16,19 +16,18 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "pci.h"
 
 #define PCI_CONFIG_DATA		0x0CFC
 #define PCI_CONFIG_ADDRESS	0x0CF8
 
-/* refer to:
- *  http://www.lowlevel.eu/wiki/Peripheral_Component_Interconnect#Zugriff_auf_den_Konfigurations-Adressraum
- *  http://wiki.osdev.org/Pci#Enumerating_PCI_Buses
+/* 
+ * Refer to:
+ * http://www.lowlevel.eu/wiki/Peripheral_Component_Interconnect#Zugriff_auf_den_Konfigurations-Adressraum
+ * http://wiki.osdev.org/Pci#Enumerating_PCI_Buses
  */
 
-
-/* from: http://www.lowlevel.eu/wiki/Peripheral_Component_Interconnect#Zugriff_auf_den_Konfigurations-Adressraum */
+/* From: http://www.lowlevel.eu/wiki/Peripheral_Component_Interconnect#Zugriff_auf_den_Konfigurations-Adressraum */
 int pci_config_readl(int bus, int dev, int func, int offset)
 {
 	int val;

@@ -16,16 +16,13 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef PS2_H
 #define PS2_H
 
 void ps2_init();
 
-// only for now:
 unsigned char read_first();
 
 void irq1_handler();
-
 
 #endif

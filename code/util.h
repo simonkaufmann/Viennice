@@ -16,10 +16,9 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef UTIL_H
 #define UTIL_H
 
-void delay(int delay); /* delay a bit, maybe about 100ms for delay = 1 */
+void delay(int delay); /* Delay a slightly, about 100ms for delay = 1 */
 
 #endif

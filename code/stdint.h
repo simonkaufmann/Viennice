@@ -16,7 +16,6 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef _STDINT_H
 #define _STDINT_H	
 

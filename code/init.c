@@ -26,19 +26,34 @@
 #include "interrupt.h"
 #include "gdt.h"
 
-/* assemble the file with the CFLAGS from Makefile and -S init.c */
+/* 
+ * Assemble the file with the CFLAGS from Makefile and -S init.c
+ *
+ * Refer to: http://www.lowlevel.eu/wiki/CMOS
+ */
 
-/* refer to: http://www.lowlevel.eu/wiki/CMOS */
-#define CMOS_PORT_ADDRESS		0x70 /* io-space address for the cmos-offset-addresses */
-#define CMOS_PORT_DATA			0x71 /* io-space address for the cmos-data */
+#define CMOS_PORT_ADDRESS 0x70 /* IO-space address for the cmos-offset-addresses */
+#define CMOS_PORT_DATA 0x71	   /* IO-space address for the cmos-data */
 
-/* function declarations */
-void print(const char* string);
-void println(const char* string);
+/* Function declarations */
+void print(const char *string);
+void println(const char *string);
 void print_int(int number);
 
-void init()	{
-	char Message[] = "\n----------------------------------------------------------------------------\n\n                                    VIENNICE\n\n\n     Experimental operating system for x86 systems\n\n     (c) Simon Kaufmann, 2019\n\n----------------------------------------------------------------------------\n";
+void init()
+{
+	char Message[] =
+		"\n----------------------------------------------------------------------------\n"
+		"\n"
+		"                                    VIENNICE\n"
+		"\n"
+		"\n"
+		"     Experimental operating system for x86 systems\n"
+		"\n"
+		"     (c) Simon Kaufmann, 2019\n"
+		"\n"
+		"----------------------------------------------------------------------------\n";
+
 	printf(Message);
 
 	gdt_init();
@@ -47,12 +62,15 @@ void init()	{
 
 	printf("\nPCI-Bus Reading:\n");
 	int device, bus;
-	for (bus = 0; bus < 3; bus++)	{
-		for (device = 0; device < 10; device++)	{
+	for (bus = 0; bus < 3; bus++)
+	{
+		for (device = 0; device < 10; device++)
+		{
 			int pci_ret = pci_config_readl(bus, device, 0, 0);
 			int vendor_id = pci_ret & 0xFFFF;
-			if (vendor_id != 0xFFFF)	{
-				/* it is a device */
+			if (vendor_id != 0xFFFF)
+			{
+				/* It is a device */
 				pci_ret = pci_config_readl(bus, device, 0, 0x008);
 				int class_id = (pci_ret >> 8) & 0xFFFFFF;
 				printf("Bus: %d Dev: %d Vendor ID: 0x%x ClassId: %x\n", bus, device, vendor_id, class_id);
@@ -60,7 +78,8 @@ void init()	{
 		}
 	}
 
-    printf("\n");
+	printf("\n");
 
-    while(1);
+	while (1)
+		;
 }

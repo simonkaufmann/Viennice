@@ -16,15 +16,12 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef GDT_H
 #define GDT_H
 
 #include "stdint.h"
 
 void gdt_init();
-//void gdt_set_entry(int num, int base_address, int limit, uint8_t access_byte, uint8_t flags);
 void gdt_set_entry(int i, unsigned int base, unsigned int limit, int flags);
-
 
 #endif

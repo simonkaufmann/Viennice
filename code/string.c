@@ -16,14 +16,14 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "string.h"
 
 void *memcpy(void *dest, const void *src, size_t n)
 {
 	unsigned int i;
-	for (i = 0; i < n; i++)	{
-		((char*)dest)[i] = ((char*)src)[i]; 
+	for (i = 0; i < n; i++)
+	{
+		((char *)dest)[i] = ((char *)src)[i];
 	}
 	return dest;
 }

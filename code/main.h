@@ -16,13 +16,12 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef MAIN_H
 #define MAIN_H
 
 #include "stdint.h"
 
-#define TRUE	1
-#define FALSE	0
+#define TRUE 1
+#define FALSE 0
 
 #endif

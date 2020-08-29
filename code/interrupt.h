@@ -16,13 +16,11 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef INTERRUPT_H
 #define INTERRUPT_H
 
 void idt_init();
-void idt_set_entry(short int num,unsigned int offset, short int selector, char gate_type, 
-	char storage_segment, char descriptor_privilege_level, char present);
-
+void idt_set_entry(short int num, unsigned int offset, short int selector, char gate_type,
+				   char storage_segment, char descriptor_privilege_level, char present);
 
 #endif

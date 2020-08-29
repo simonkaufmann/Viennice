@@ -16,11 +16,10 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef STRING_H
 #define STRING_H
 
-typedef unsigned int size_t; /* is this the correct declaration? */
+typedef unsigned int size_t; /* Is this the correct declaration? */
 
 void *memcpy(void *dest, const void *src, size_t n);
 

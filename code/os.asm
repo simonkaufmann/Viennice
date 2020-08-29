@@ -15,22 +15,23 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#######
-# Multiboot-Standard - Kernel
-######
-
-# refer to: http://www.lowlevel.eu/wiki/Teil_4_-_Hello_World
-
-# multiboot specification: http://www.gnu.org/software/grub/manual/multiboot/multiboot.htm
+/*
+ * Multiboot-Standard - Kernel
+ *
+ *
+ * Refer to: http://www.lowlevel.eu/wiki/Teil_4_-_Hello_World
+ *
+ * Multiboot specification: http://www.gnu.org/software/grub/manual/multiboot/multiboot.htm
+ *
+ * Mixing C and Assembly: https://courses.engr.illinois.edu/ece390/books/labmanual/c-prog-mixing.html
+ */
 
 .section .text
 
-.space 4 #why??
-.int 0x1BADB002		#magic number for multiboot
-.int 0x00			#flags 
-.int -0x1BADB002	#checksum = -flags - magic (must be zero when added to 
-#flags and magic number!)
+.space 4
+.int 0x1BADB002		# Magic number for multiboot
+.int 0x00			# Flags 
+.int -0x1BADB002	# Checksum = -flags - magic (must be zero when added to flags and magic number!)
 
 .extern init
 .extern irq1_handler
@@ -50,45 +51,19 @@
 
 _start: 
 	mov $kernel_stack, %esp
-		
-#	mov $'A', %eax
-#	mov %eax, 0xb8000;
-#	mov $0x07, %eax
-#	mov %eax, 0xb8001;
-
-# init keyboard controller
-# refer to: http://www.lowlevel.eu/wiki/Keyboard_Controller under
-# initalisierung
-#repeat:
-#	inb 0x64, %al
-#	and $0x01, %al
-#	cmp %al, $0x00
-#	je cont1 
-#	inb 0x60, %al
-#	jmp repeat:
-#cont1:G
-#	inb 0x64, %al
-#	and $0x02, %al
-#	cmp %al, $0x00
-#	jne cont1
-#	outb $0xF4, 0x60
 
 	call init
-
-	
 
 _stop:
 	cli
 	hlt
-
 	jmp _stop
 
-# mixing c and assembler: https://courses.engr.illinois.edu/ece390/books/labmanual/c-prog-mixing.html
 outl:
 	pushl %ebp
 	movl %esp, %ebp
-	movw 8(%ebp), %dx # first parameter (parameter: data) is accessed with ebp+8! (always 4 offset because of return address!)
-	movl 12(%ebp), %eax # (parameter: address) it is a short int (16 bit?) but gcc stores it with pushl -> pushes 32-bit
+	movw 8(%ebp), %dx	# First parameter (parameter: data) is accessed with (ebp+8) (4 offset because of return address)
+	movl 12(%ebp), %eax # Second parameter (parameter: address) it is a short int (16 bit?) but gcc stores it with pushl and pushes 32-bit
 	outl %eax, %dx
 	popl %ebp
 	ret
@@ -96,7 +71,7 @@ outl:
 inl:
 	pushl %ebp
 	movl %esp, %ebp
-	movw 8(%ebp), %dx # it is a short int (16 bit?) but gcc stores it with pushl -> pushes 32-bit
+	movw 8(%ebp), %dx	# It is a short int (16 bit?) but gcc stores it with pushl and pushes 32-bit
 	inl %dx, %eax
 	popl %ebp
 	ret
@@ -121,8 +96,9 @@ inb:
 
 default_isr:
 	add $0x04, %esp
+
 default_isr_no_error:
-	# see: http://www.lowlevel.eu/wiki/ISR for example common isr!
+	# Refer to: http://www.lowlevel.eu/wiki/ISR for example common ISR
 	iret	
 
 idt32:
@@ -148,15 +124,16 @@ lgdt_asm:
 	lgdt (%eax)
 	pushl %eax
 	mov $0x10, %ax
-	mov %ax, %ds # load segment register!
+	mov %ax, %ds	# Load segment register!
     	mov %ax, %ss
     	mov %ax, %es
 	jmp	$0x08, $flush_cs #$0x100000
+
 flush_cs:
 	popl %eax
 	ret
 
-
 .section .bss
 .space 8192
+
 kernel_stack:

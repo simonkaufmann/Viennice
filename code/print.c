@@ -16,58 +16,71 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "print.h"
 #include "stdarg.h"
 #include "string.h"
 #include "main.h"
 
-#define SCREEN_RAM	0xb8000
-#define SCREEN_MAX_ADDRESS (SCREEN_RAM+2*LINES*ROWS) /* 2 because two bytes for each character (character + style) */
-#define LINES	25
-#define ROWS		80
+#define SCREEN_RAM 0xb8000
+#define SCREEN_MAX_ADDRESS (SCREEN_RAM + 2 * LINES * ROWS) /* 2 because two bytes for each character (character + style) */
+#define LINES 25
+#define ROWS 80
 
-char *screen_pointer = (char *) SCREEN_RAM;
+char *screen_pointer = (char *)SCREEN_RAM;
 
-/* internal functions */
+/* Internal functions */
 
-static void check_screen_pointer()	{
-	if (screen_pointer >= SCREEN_MAX_ADDRESS)	{
+static void check_screen_pointer()
+{
+	if (screen_pointer >= SCREEN_MAX_ADDRESS)
+	{
 		shift_screen_up(1);
 	}
 }
 
-/* printing */
+/* Printing */
 
-void printf(const char* string, ...)
+void printf(const char *string, ...)
 {
 	va_list va;
 	int i = 0;
-	while (string[i++] != 0);
-	va_start(va, string+i);
+	while (string[i++] != 0)
+		;
+	va_start(va, string + i);
 
 	i = 0;
-	while (string[i] != 0)	{
-		switch (string[i])	{
-			case '\n':
-				println("");
-				break;
-			case '%':
-				i++;
-				if (string[i] == 'd')	{
-					print_int(va_arg(va, int));
-				} else if (string[i] == 'x')	{
-					print_hex(va_arg(va, int));
-				} else if (string[i] == 'c')	{
-					print_char(va_arg(va, int)); /* also here the type int! otherwise it would not work as tests have shown */
-				} else if (string[i] == 's')	{
-					print(va_arg(va, char*));
-				} else if (string[i] == '%')	{
-					print_char('%');
-				}
-				break;
-			default:
-				print_char(string[i]);
+	while (string[i] != 0)
+	{
+		switch (string[i])
+		{
+		case '\n':
+			println("");
+			break;
+		case '%':
+			i++;
+			if (string[i] == 'd')
+			{
+				print_int(va_arg(va, int));
+			}
+			else if (string[i] == 'x')
+			{
+				print_hex(va_arg(va, int));
+			}
+			else if (string[i] == 'c')
+			{
+				print_char(va_arg(va, int)); /* Also here the type int! otherwise it would not work as tests have shown */
+			}
+			else if (string[i] == 's')
+			{
+				print(va_arg(va, char *));
+			}
+			else if (string[i] == '%')
+			{
+				print_char('%');
+			}
+			break;
+		default:
+			print_char(string[i]);
 		}
 		i++;
 	}
@@ -78,46 +91,47 @@ void print_char(char c)
 {
 	*screen_pointer = c;
 	screen_pointer++;
-	check_screen_pointer(); /* check if screen is at end -> shift upwards */
-	*screen_pointer = 0x07; /* gray with black background */
+	check_screen_pointer(); /* Check if screen is at end -> shift upwards */
+	*screen_pointer = 0x07; /* Gray with black background */
 	screen_pointer++;
 	check_screen_pointer();
 }
 
-void print_intern(const char* string, int newline)
+void print_intern(const char *string, int newline)
 {
 	int i = 0;
-	while (string[i] != 0)	{
+	while (string[i] != 0)
+	{
 		print_char(string[i]);
 		i++;
 	}
-	if (newline != FALSE)	{
+	if (newline != FALSE)
+	{
 		int temp = ((int)(screen_pointer - SCREEN_RAM)) % (2 * ROWS);
 		screen_pointer += (2 * ROWS) - temp;
 		check_screen_pointer();
 	}
 }
 
-void print(const char* string)
+void print(const char *string)
 {
 	print_intern(string, FALSE);
 }
 
-void println(const char* string)
+void println(const char *string)
 {
 	print_intern(string, TRUE);
 }
 
-
-
-/* accessing the screen */
+/* Accessing the screen */
 
 void reset_line()
 {
-	int temp = ((int)(screen_pointer - SCREEN_RAM)) % (2 *ROWS);
+	int temp = ((int)(screen_pointer - SCREEN_RAM)) % (2 * ROWS);
 	screen_pointer -= temp;
 	int i;
-	for (i = 0; i < ROWS; i++)	{
+	for (i = 0; i < ROWS; i++)
+	{
 		screen_pointer[i] = 0;
 	}
 }
@@ -126,18 +140,21 @@ void shift_screen_up(int lines)
 {
 	char *tmp_screen_pointer = SCREEN_RAM;
 	char *tmp_screen_pointer_up = tmp_screen_pointer + lines * ROWS * 2;
-	while (tmp_screen_pointer_up < SCREEN_MAX_ADDRESS)	{
+	while (tmp_screen_pointer_up < SCREEN_MAX_ADDRESS)
+	{
 		memcpy(tmp_screen_pointer, tmp_screen_pointer_up, ROWS * 2);
 		tmp_screen_pointer += ROWS * 2;
-		tmp_screen_pointer_up += ROWS*2;
+		tmp_screen_pointer_up += ROWS * 2;
 	}
 	/* clear that was not copied any more! */
-	while (tmp_screen_pointer < SCREEN_MAX_ADDRESS)	{
+	while (tmp_screen_pointer < SCREEN_MAX_ADDRESS)
+	{
 		*tmp_screen_pointer = 0;
 		tmp_screen_pointer++;
 	}
 	screen_pointer -= lines * ROWS * 2;
-	if (screen_pointer < SCREEN_RAM)	{
+	if (screen_pointer < SCREEN_RAM)
+	{
 		screen_pointer = SCREEN_RAM;
 	}
 }
@@ -147,8 +164,10 @@ void clear_screen()
 	screen_pointer = SCREEN_RAM;
 	int line;
 	int row;
-	for (row = 0; row < ROWS; row++)	{
-		for (line = 0; line < LINES; line++)	{
+	for (row = 0; row < ROWS; row++)
+	{
+		for (line = 0; line < LINES; line++)
+		{
 			*screen_pointer = 0;
 			screen_pointer++;
 			*screen_pointer = 0;
@@ -160,32 +179,21 @@ void clear_screen()
 
 void set_cursor(int line, int row)
 {
-	if (line >= LINES)	{
+	if (line >= LINES)
+	{
 		line = LINES - 1;
 	}
-	if (row >= ROWS)	{
+	if (row >= ROWS)
+	{
 		row = ROWS - 1;
 	}
 	screen_pointer = SCREEN_RAM + (line * ROWS + row) * 2;
 }
 
-
-
-/* printing numbers */
+/* Printing numbers */
 
 void print_bcd(int bcd_number)
 {
-	/* only for 8-bit values! */
-
-//	int i, always = FALSE;
-//	for (i = 7; i > 0; i--)	{
-//		int temp = (bcd_number >> (i * 4)) & 0x0F;
-//		if (temp != 0 || always != FALSE)	{
-//			print_int(temp); /* print only if it is not equal 0 */
-//			always = TRUE;
-//		}
-//	}
-//	print_int(bcd_number & 0x0F); /* print always (if all is zero that one zero is printed! */
 	int binary = ((bcd_number / 16) * 10) + (bcd_number & 0xf);
 	print_int(binary);
 }
@@ -193,59 +201,88 @@ void print_bcd(int bcd_number)
 void print_hex(int number)
 {
 	int was_negative = FALSE;
-	if (number < 0)	{
+
+	if (number < 0)
+	{
 		number = -number;
 		was_negative = TRUE;
 	}
+
 	static char string[11];
 	string[10] = 0;
+
 	int i = 9;
 	string[i] = (number % 16);
-	if (string[i] >= 0 && string[i] < 10)	{
+	if (string[i] >= 0 && string[i] < 10)
+	{
 		string[i] += '0';
-	} else	{
+	}
+	else
+	{
 		string[i] += 'a' - 10;
 	}
+
 	number /= 16;
-	while (number > 0)	{
+	while (number > 0)
+	{
 		string[--i] = (number % 16);
-		if (string[i] >= 0 && string[i] < 10)	{
+
+		if (string[i] >= 0 && string[i] < 10)
+		{
 			string[i] += '0';
-		} else	{
+		}
+		else
+		{
 			string[i] += 'a' - 10;
 		}
+
 		number /= 16;
-		if (i == 1)	{
+
+		if (i == 1)
+		{
 			break;
 		}
 	}
-	if (was_negative != FALSE)	{
+
+	if (was_negative != FALSE)
+	{
 		string[--i] = '-';
 	}
-	print(string+i);
+
+	print(string + i);
 }
 
 void print_int(int number)
 {
 	int was_negative = FALSE;
-	if (number < 0)	{
+
+	if (number < 0)
+	{
 		number = -number;
 		was_negative = TRUE;
 	}
+
 	static char string[11];
 	string[10] = 0;
+
 	int i = 9;
-	string[i] = (number % 10) + '0'; /* that also number = 0 gets printed */
+	string[i] = (number % 10) + '0'; /* That also number = 0 gets printed */
 	number /= 10;
-	while (number > 0)	{
+	while (number > 0)
+	{
 		string[--i] = (number % 10) + '0';
 		number /= 10;
-		if (i == 1)	{ /* break with 1 so that there is also space for a '-' if number was negative */
+		if (i == 1)
+		{
+			/* Break with 1 so that there is also space for a '-' if number was negative */
 			break;
 		}
 	}
-	if (was_negative != FALSE)	{
+
+	if (was_negative != FALSE)
+	{
 		string[--i] = '-';
 	}
-	print(string+i);
+
+	print(string + i);
 }

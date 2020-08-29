@@ -16,7 +16,6 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef PIC_H
 #define PIC_H
 

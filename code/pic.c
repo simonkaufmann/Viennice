@@ -16,8 +16,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-/* refer to: http://www.lowlevel.eu/wiki/PIC_Tutorial */
+/* Refer to: http://www.lowlevel.eu/wiki/PIC_Tutorial */
 
 #include "stdint.h"
 #include "os.h"
@@ -25,51 +24,50 @@
 #include "print.h"
 #include "ps2.h"
 
+#define PIC_MASTER_COMMAND 0x20
+#define PIC_MASTER_DATA 0x21
+#define PIC_MASTER_IMR 0x21
+#define PIC_SLAVE_COMMAND 0xA0
+#define PIC_SLAVE_DATA 0xA1
+#define PIC_SLAVE_IMR 0xA1
 
-#define PIC_MASTER_COMMAND	0x20
-#define PIC_MASTER_DATA		0x21
-#define PIC_MASTER_IMR		0x21
-#define PIC_SLAVE_COMMAND	0xA0
-#define PIC_SLAVE_DATA		0xA1
-#define PIC_SLAVE_IMR		0xA1
-
-#define PIC_EOI	0x20
+#define PIC_EOI 0x20
 
 void pic_remap(int interrupt_num)
 {
-	/* send initialisation code */
-	outb(PIC_MASTER_COMMAND, 0x11); 
+	/* Send initialisation code */
+	outb(PIC_MASTER_COMMAND, 0x11);
 	outb(PIC_SLAVE_COMMAND, 0x11);
-	
+
 	/*
-	 *  send the offset in IDT -> IRQ0 is in interrupt descriptor
+	 * Send the offset in IDT -> IRQ0 is in interrupt descriptor
 	 * table at entry with interrupt_num, usual 32 is taken
 	 * because it is right after exceptions.
 	 * value must be divisible without remainder by 8
 	 */
 	outb(PIC_MASTER_DATA, interrupt_num);
-	outb(PIC_SLAVE_DATA, interrupt_num+8); /* second pic has the upper 8 interrupts */
+	outb(PIC_SLAVE_DATA, interrupt_num + 8); /* Second pic has the upper 8 interrupts */
 
-	/* the two pics communicate via IRQ2 */
-	outb(PIC_MASTER_DATA, (1 << 2)); /* send to master with bitmask */
-	outb(PIC_SLAVE_DATA, 2); /* send to slave as binary value */
+	/* The two pics communicate via IRQ2 */
+	outb(PIC_MASTER_DATA, (1 << 2)); /* Send to master with bitmask */
+	outb(PIC_SLAVE_DATA, 2);		 /* Send to slave as binary value */
 
-	/* indicates that processor is in 8086 mode */
+	/* Indicates that processor is in 8086 mode */
 	outb(PIC_MASTER_DATA, 0x01);
 	outb(PIC_SLAVE_DATA, 0x01);
 }
 
 void pic_mask_irqs(uint16_t mask)
 {
-	outb(PIC_MASTER_IMR, (uint8_t) mask);
-	outb(PIC_SLAVE_IMR, (uint8_t) (mask>>8));
+	outb(PIC_MASTER_IMR, (uint8_t)mask);
+	outb(PIC_SLAVE_IMR, (uint8_t)(mask >> 8));
 }
- 
+
 void pic_send_eoi(int irq_num)
 {
 	outb(PIC_MASTER_COMMAND, PIC_EOI);
-	if (irq_num > 7) {
+	if (irq_num > 7)
+	{
 		outb(PIC_SLAVE_COMMAND, PIC_EOI);
 	}
 }
-

@@ -16,7 +16,6 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef PRINT_H
 #define PRINT_H
 
@@ -29,7 +28,7 @@ void print_hex(int number);
 void print_bcd(int bcd_number);
 
 void clear_screen();
-void reset_line(); /* clears the line and set cursor to beginning of current line */
+void reset_line(); /* Clears the line and set cursor to beginning of current line */
 void shift_screen_up(int lines);
 void set_cursor(int line, int row);
 

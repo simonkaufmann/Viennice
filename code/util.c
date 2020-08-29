@@ -16,18 +16,19 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "util.h"
 
 void delay(int delay)
 {
 	int count;
-	for (count = 0; count < delay; count++)	{
+	for (count = 0; count < delay; count++)
+	{
 		unsigned short int i = 0;
-		while(++i != 0)	{
+		while (++i != 0)
+		{
 			unsigned char j = 0;
-			while(++j != 0)	{
-			
+			while (++j != 0)
+			{
 			}
 		}
 	}

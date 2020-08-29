@@ -16,12 +16,10 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef PCI_H
 #define PCI_H
 
 int pci_config_readl(int bus, int dev, int func, int offset);
 void pci_config_writel(int bus, int dev, int func, int offset, int val);
-
 
 #endif

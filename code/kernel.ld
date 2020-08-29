@@ -1,4 +1,4 @@
-/* from http://www.lowlevel.eu/wiki/Teil_4_-_Hello_World */
+/* From http://www.lowlevel.eu/wiki/Teil_4_-_Hello_World */
 
 ENTRY(_start)
 
@@ -21,3 +21,4 @@ SECTIONS
 	.bss ALIGN(4096) : {
 		*(.bss)
 	}
+}
