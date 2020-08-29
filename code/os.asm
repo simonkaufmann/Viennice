@@ -35,6 +35,8 @@
 
 .extern init
 .extern irq1_handler
+.extern software_interrupt_80h
+.extern pic_send_eoi
 .global lidt_asm
 .global lgdt_asm
 
@@ -44,10 +46,12 @@
 .global inl
 .global outb
 .global inb
+.global int80h
 
 .global default_isr
 .global default_isr_no_error
 .global idt32
+.global idt128
 
 _start: 
 	mov $kernel_stack, %esp
@@ -94,6 +98,10 @@ inb:
 	popl %ebp
 	ret
 
+int80h:
+	int $0x80
+	ret
+
 default_isr:
 	add $0x04, %esp
 
@@ -108,6 +116,14 @@ idt32:
 	pushl $0x02
 	call pic_send_eoi
 	add $0x04, %esp
+	popfl
+	popal
+	iret
+
+idt128:
+	pushal
+	pushfl
+	call software_interrupt_80h
 	popfl
 	popal
 	iret

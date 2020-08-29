@@ -1,4 +1,4 @@
-SRCS = os.asm init.c print.c pci.c util.h string.c ps2.c pic.c interrupt.c gdt.c
+SRCS = os.asm init.c print.c pci.c util.h string.c ps2.c pic.c interrupt.c gdt.c soft_int.c
 OBJS = $(addsuffix .o,$(basename $(SRCS)))
 
 # If using system gcc:

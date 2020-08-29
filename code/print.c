@@ -21,8 +21,8 @@
 #include "string.h"
 #include "main.h"
 
-#define SCREEN_RAM 0xb8000
-#define SCREEN_MAX_ADDRESS (SCREEN_RAM + 2 * LINES * ROWS) /* 2 because two bytes for each character (character + style) */
+#define SCREEN_RAM ((char *) 0xb8000)
+#define SCREEN_MAX_ADDRESS ((char *) (SCREEN_RAM + 2 * LINES * ROWS)) /* 2 because two bytes for each character (character + style) */
 #define LINES 25
 #define ROWS 80
 

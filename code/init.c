@@ -80,6 +80,8 @@ void init()
 
 	printf("\n");
 
+	int80h();
+
 	while (1)
 		;
 }

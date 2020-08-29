@@ -34,7 +34,7 @@ uint32_t idt[2 * IDT_ENTRIES];
 void idt_init()
 {
 	pic_remap(32);
-	
+
 	/* Make entries for exceptions */
 	int i;
 	for (i = 0; i < 32; i++)
@@ -58,8 +58,14 @@ void idt_init()
 
 	idt_set_entry(32, idt32, 0b1000, IDT_INTERRUPT_GATE_32_BIT, 0, 0, 1);
 
-	for (i = 33; i < 256; i++)
+	for (i = 33; i < 128; i++)
 	{
+		idt_set_entry(i, default_isr_no_error, 0b1000, IDT_INTERRUPT_GATE_32_BIT, 0, 0, 1);
+	}
+	
+	idt_set_entry(128, idt128, 0b1000, IDT_INTERRUPT_GATE_32_BIT, 0, 0, 1);
+
+	for (i = 129; i < 256; i++) {
 		idt_set_entry(i, default_isr_no_error, 0b1000, IDT_INTERRUPT_GATE_32_BIT, 0, 0, 1);
 	}
 
