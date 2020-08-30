@@ -20,7 +20,7 @@
 #define PRINT_H
 
 void print(const char *string);
-void printf(const char *string, ...);
+void kprintf(const char *string, ...);
 void print_char(char c);
 void println(const char* string);
 void print_int(int number);	

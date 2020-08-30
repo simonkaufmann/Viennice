@@ -21,8 +21,8 @@
 #include "string.h"
 #include "main.h"
 
-#define SCREEN_RAM ((char *) 0xb8000)
-#define SCREEN_MAX_ADDRESS ((char *) (SCREEN_RAM + 2 * LINES * ROWS)) /* 2 because two bytes for each character (character + style) */
+#define SCREEN_RAM ((char *)0xb8000)
+#define SCREEN_MAX_ADDRESS ((char *)(SCREEN_RAM + 2 * LINES * ROWS)) /* 2 because two bytes for each character (character + style) */
 #define LINES 25
 #define ROWS 80
 
@@ -40,13 +40,13 @@ static void check_screen_pointer()
 
 /* Printing */
 
-void printf(const char *string, ...)
+void kprintf(const char *string, ...)
 {
 	va_list va;
 	int i = 0;
 	while (string[i++] != 0)
 		;
-	va_start(va, string + i);
+	va_start(va, string);
 
 	i = 0;
 	while (string[i] != 0)

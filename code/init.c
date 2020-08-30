@@ -50,13 +50,13 @@ void init()
 		"\n"
 		"----------------------------------------------------------------------------\n";
 
-	printf(Message);
+	kprintf(Message);
 
 	gdt_init();
 	idt_init();
 	ps2_init();
 
-	printf("\nPCI-Bus Reading:\n");
+	kprintf("\nPCI-Bus Reading:\n");
 	int device, bus;
 	for (bus = 0; bus < 3; bus++)
 	{
@@ -69,12 +69,12 @@ void init()
 				/* It is a device */
 				pci_ret = pci_config_readl(bus, device, 0, 0x008);
 				int class_id = (pci_ret >> 8) & 0xFFFFFF;
-				printf("Bus: %d Dev: %d Vendor ID: 0x%x ClassId: %x\n", bus, device, vendor_id, class_id);
+				kprintf("Bus: %d Dev: %d Vendor ID: 0x%x ClassId: %x\n", bus, device, vendor_id, class_id);
 			}
 		}
 	}
 
-	printf("\n");
+	kprintf("\n");
 
 	char hallo[] = "Syscall Write Tested\n";
 	write(0, hallo, sizeof(hallo));

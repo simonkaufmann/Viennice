@@ -17,9 +17,10 @@
  */
 
 #include "pci.h"
+#include "os.h"
 
-#define PCI_CONFIG_DATA		0x0CFC
-#define PCI_CONFIG_ADDRESS	0x0CF8
+#define PCI_CONFIG_DATA 0x0CFC
+#define PCI_CONFIG_ADDRESS 0x0CF8
 
 /* 
  * Refer to:
@@ -39,7 +40,7 @@ int pci_config_readl(int bus, int dev, int func, int offset)
 
 void pci_config_writel(int bus, int dev, int func, int offset, int val)
 {
-	int address	= 0x80000000 | (bus << 16) | (dev << 11) | (func << 8) | (offset & 0xFC);
+	int address = 0x80000000 | (bus << 16) | (dev << 11) | (func << 8) | (offset & 0xFC);
 	outl(PCI_CONFIG_ADDRESS, address);
 	outl(PCI_CONFIG_DATA, val);
 }

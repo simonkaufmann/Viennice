@@ -1,25 +1,25 @@
 /*
- *  ps2.c - ps2 driver for os
- *  Copyright (C) 2016  Simon Kaufmann, HeKa
+ *  ps2.c - ps2 driver for os Copyright (C) 2016  Simon Kaufmann, HeKa
  *
- *  This is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ *  This is free software: you can redistribute it and/or modify it under the
+ *  terms of the GNU General Public License as published by the Free Software
+ *  Foundation, either version 3 of the License, or (at your option) any later
+ *  version.
  *
- *  Foobar is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY
+ *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ *  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ *  details.
  *
- *  You should have received a copy of the GNU General Public License.
- *  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License. If not,
+ *  see <http://www.gnu.org/licenses/>.
  */
 
 /* Refer to: http://wiki.osdev.org/%228042%22_PS/2_Controller#Overview
  *
- * Scancodes see: http://www.computer-engineering.org/ps2keyboard/scancodes2.html 
- * on osdev.org: http://wiki.osdev.org/PS/2_Keyboard it is scancode set 2.
+ * Scancodes see:
+ * http://www.computer-engineering.org/ps2keyboard/scancodes2.html on osdev.org:
+ * http://wiki.osdev.org/PS/2_Keyboard it is scancode set 2.
  */
 
 #include "os.h"
@@ -55,9 +55,9 @@
 #define PS2_SCANCODE_BREAK3 3 /* Break with e0 f0 */
 #define PS2_SCANCODE_BREAK4 4 /* Break with e1 */
 
-/* Character codes
- * For ascii_charblock if first 4 bytes (two dimensional array) are 0x01 (state change), then
- * this code is in the second four bytes to indicate which state has changed 0x80 and 0x04 is released.
+/* Character codes For ascii_charblock if first 4 bytes (two dimensional array)
+ * are 0x01 (state change), then this code is in the second four bytes to
+ * indicate which state has changed 0x80 and 0x04 is released.
  */
 #define CAPS 0x00
 #define SHIFT 0x01
@@ -70,22 +70,18 @@
 #define MENU 0x08
 #define CTRL_RIGHT 0x09
 
-volatile char received = FALSE; /* Only for now */
-volatile uint8_t value_received;
-
-/* Keycodes:
- * First byte: 80 -> pressed, 04 -> released
- * Second byte: 00 -> left keyboard, 01 -> keypad, 02 -> middle pad (arrow keys, delete key...)
- * Third byte: number of row starting with 1
- * Fourth byte: number of column starting with 1
+/* Keycodes: First byte: 80 -> pressed, 04 -> released Second byte: 00 -> left
+ * keyboard, 01 -> keypad, 02 -> middle pad (arrow keys, delete key...) Third
+ * byte: number of row starting with 1 Fourth byte: number of column starting
+ * with 1
  *
  * Keys are given as comment in us-layout
  *
- * Reference keyboard for character block is
- * ISO-keyboard: https://en.wikipedia.org/wiki/File:KB_United_Kingdom.svg
+ * Reference keyboard for character block is ISO-keyboard:
+ * https://en.wikipedia.org/wiki/File:KB_United_Kingdom.svg
  *
- * Reference keyboard for number block and f-keys is:
- * ANSI-keyboard: https://en.wikipedia.org/wiki/Keyboard_layout#/media/File:ANSI_Keyboard_Layout_Diagram_with_Form_Factor.svg
+ * Reference keyboard for number block and f-keys is: ANSI-keyboard:
+ * https://en.wikipedia.org/wiki/Keyboard_layout#/media/File:ANSI_Keyboard_Layout_Diagram_with_Form_Factor.svg
  */
 
 int keycode_make[] = /* All with no prefix */
@@ -425,33 +421,22 @@ int keycode_break3[] = {
 };
 
 /*
- * Character tables:
- * First four bytes: 0x00 -> real character, 0x01 -> state change (shift and so on)
- *			   0x01 -> needs another key press
- * Second four bytes: the character or code for key (utf8)
+ * Character tables: First four bytes: 0x00 -> real character, 0x01 -> state
+ * change (shift and so on) 0x01 -> needs another key press Second four bytes:
+ * the character or code for key (utf8)
  */
 
-int ascii_charblock_line1[13][2]; /* Only f-keys and so on */
+int ascii_charblock_line1[13 * 2]; /* Only f-keys and so on */
 
-int ascii_charblock_line2[][2] =
-	{
-		{0x00, '`'}, {0x00, '1'}, {0x00, '2'}, {0x00, '3'}, {0x00, '4'}, {0x00, '5'}, {0x00, '6'}, {0x00, '7'}, {0x00, '8'}, {0x00, '9'}, {0x00, '0'}, {0x00, '-'}, {0x00, '='}};
+int ascii_charblock_line2[] = {0x00, '`', 0x00, '1', 0x00, '2', 0x00, '3', 0x00, '4', 0x00, '5', 0x00, '6', 0x00, '7', 0x00, '8', 0x00, '9', 0x00, '0', 0x00, '-', 0x00, '='};
 
-int ascii_charblock_line3[][2] =
-	{
-		{0x00, '\t'}, {0x00, 'q'}, {0x00, 'w'}, {0x00, 'e'}, {0x00, 'r'}, {0x00, 't'}, {0x00, 'y'}, {0x00, 'u'}, {0x00, 'i'}, {0x00, 'o'}, {0x00, 'p'}, {0x00, '['}, {0x00, ']'}};
+int ascii_charblock_line3[] = {0x00, '\t', 0x00, 'q', 0x00, 'w', 0x00, 'e', 0x00, 'r', 0x00, 't', 0x00, 'y', 0x00, 'u', 0x00, 'i', 0x00, 'o', 0x00, 'p', 0x00, '[', 0x00, ']'};
 
-int ascii_charblock_line4[][2] =
-	{
-		{0x01, CAPS}, {0x00, 'a'}, {0x00, 's'}, {0x00, 'd'}, {0x00, 'f'}, {0x00, 'g'}, {0x00, 'h'}, {0x00, 'j'}, {0x00, 'k'}, {0x00, 'l'}, {0x00, ';'}, {0x00, '\''}, {0x00, '\\'}, {0x00, '\n'}};
+int ascii_charblock_line4[] = {0x01, CAPS, 0x00, 'a', 0x00, 's', 0x00, 'd', 0x00, 'f', 0x00, 'g', 0x00, 'h', 0x00, 'j', 0x00, 'k', 0x00, 'l', 0x00, ';', 0x00, '\'', 0x00, '\\', 0x00, '\n'};
 
-int ascii_charblock_line5[][2] =
-	{
-		{0x01, SHIFT}, {0x00, '\\'}, {0x00, 'z'}, {0x00, 'x'}, {0x00, 'c'}, {0x00, 'v'}, {0x00, 'b'}, {0x00, 'n'}, {0x00, 'm'}, {0x00, ','}, {0x00, '.'}, {0x00, '/'}, {0x01, SHIFT_RIGHT}};
+int ascii_charblock_line5[] = {0x01, SHIFT, 0x00, '\\', 0x00, 'z', 0x00, 'x', 0x00, 'c', 0x00, 'v', 0x00, 'b', 0x00, 'n', 0x00, 'm', 0x00, ',', 0x00, '.', 0x00, '/', 0x01, SHIFT_RIGHT};
 
-int ascii_charblock_line6[][2] =
-	{
-		{0x01, CTRL}, {0x01, SUPER}, {0x01, ALT}, {0x00, ' '}, {0x01, ALTGR}, {0x01, SUPER_RIGHT}, {0x01, MENU}, {0x01, CTRL_RIGHT}};
+int ascii_charblock_line6[] = {0x01, CTRL, 0x01, SUPER, 0x01, ALT, 0x00, ' ', 0x01, ALTGR, 0x01, SUPER_RIGHT, 0x01, MENU, 0x01, CTRL_RIGHT};
 
 int *ascii_charblock_line[] =
 	{
@@ -505,26 +490,6 @@ static char is_controller2_ok()
 	}
 }
 
-static void write_first(char byte)
-{
-	while ((inb(PS2_STATUS) & (1 << 1)) > 0)
-		;
-	outb(PS2_DATA, byte);
-}
-
-static void write_second(char byte)
-{
-	outb(PS2_COMMAND, PS2_CMD_WRITE_SECOND);
-	while ((inb(PS2_STATUS) & (1 << 1)) > 0)
-		;
-	outb(PS2_COMMAND, byte);
-}
-
-static char read_second()
-{
-	return 0;
-}
-
 static void set_bit_control_configuration_byte(int bitmask)
 {
 	outb(PS2_COMMAND, PS2_CMD_READ_CTRL_BYTE);
@@ -543,17 +508,9 @@ static void clear_bit_control_configuration_byte(int bitmask)
 	outb(PS2_DATA, tmp);
 }
 
-static uint8_t wait_interrupt()
-{
-	while (received == FALSE)
-		;
-	received = FALSE;
-	return value_received;
-}
-
 void ps2_init()
 {
-	printf("\nPS2 Beginning\n");
+	kprintf("\nPS2 Beginning\n");
 	outb(PS2_COMMAND, PS2_CMD_DISABLE_SECOND);
 	outb(PS2_COMMAND, PS2_CMD_DISABLE_FIRST);
 
@@ -562,8 +519,8 @@ void ps2_init()
 	int bitmask = (1 << PS2_CTRL_BYTE_FIRST_TRANSLATION) | (1 << PS2_CTRL_BYTE_FIRST_INTERRUPT) | (1 << PS2_CTRL_BYTE_SECOND_INTERRUPT);
 	clear_bit_control_configuration_byte(bitmask);
 
-	int ret = 0x00;					  /* Read_controller_config(); */
-	printf("PS2-Reply: 0x%x\n", ret); /* Should be 0x55 */
+	int ret = 0x00;					   /* Read_controller_config(); */
+	kprintf("PS2-Reply: 0x%x\n", ret); /* Should be 0x55 */
 
 	/* Test if there is a second channel and test both channels */
 	outb(PS2_COMMAND, PS2_CMD_ENABLE_SECOND);
@@ -574,16 +531,16 @@ void ps2_init()
 
 		outb(PS2_COMMAND, PS2_CMD_TEST_FIRST);
 		ret = inb(PS2_DATA);
-		printf("Test PS2 Channel 2: 0x%x\n", ret);
+		kprintf("Test PS2 Channel 2: 0x%x\n", ret);
 		if (ret == 0x00)
 		{
-			printf("Test PS2 Channel 2 passed\n");
+			kprintf("Test PS2 Channel 2 passed\n");
 			channel_ok |= (1 << 2);
 		}
 	}
 	else
 	{
-		printf("Single PS2-Controller\n");
+		kprintf("Single PS2-Controller\n");
 	}
 
 	outb(PS2_COMMAND, PS2_CMD_ENABLE_FIRST);
@@ -591,10 +548,10 @@ void ps2_init()
 	outb(PS2_COMMAND, PS2_CMD_TEST_FIRST);
 	ret = inb(PS2_DATA);
 
-	printf("Test PS2 Channel 1: 0x%x\n", ret);
+	kprintf("Test PS2 Channel 1: 0x%x\n", ret);
 	if (ret == 0x00)
 	{
-		printf("Test PS2 Channel 1 passed\n");
+		kprintf("Test PS2 Channel 1 passed\n");
 		channel_ok |= (1 << 1);
 	}
 
@@ -665,8 +622,8 @@ int scancode_keycode(int *scancode, int length)
  * keycode_char - convert keycode to char
  * @keycode: give keycode
  *
- * Return: Integer variable, byte0 is char in ascii code,
- * byte3 is 0x80 if key is pressed and 0x40 if key is released.
+ * Return: Integer variable, byte0 is char in ascii code, byte3 is 0x80 if key
+ * is pressed and 0x40 if key is released.
  */
 int keycode_char(int keycode)
 {
@@ -681,16 +638,15 @@ int keycode_char(int keycode)
 	char c = ascii_keyboard_uk[x2][x3 - 1][2 * (x4 - 1) + 1]; // Write comment here why we can't use the last array index, but have to do the multiplication!
 	if (ascii_keyboard_uk[x2][x3 - 1][2 * (x4 - 1)] == 0x01)
 	{
-		printf("Special Key!");
+		kprintf("Special Key!");
 	}
 	return ((x1 << 24) | c);
 }
 
 void irq1_handler()
 {
-	static int val[3], old_val = 0, old_val_temp = 0;
+	static int val[3];
 	static int count = 0;
-	int release = FALSE;
 	if ((inb(PS2_STATUS) & (1 << 0)) == 0)
 	{
 		/* Look in status register if new bytes are in data-register */
@@ -698,7 +654,6 @@ void irq1_handler()
 		return;
 	}
 	val[count] = inb(PS2_DATA);
-	old_val_temp = val[count];
 	if (val[count] != 0xf0 && val[count] != 0xe0)
 	{
 #ifdef DEBUG_PRINT_SCANCODE
@@ -714,7 +669,7 @@ void irq1_handler()
 		if ((charcode & 0xff000000) == 0x80000000)
 		{
 			/* Key is pressed */
-			printf("%c", charcode & 0xff);
+			kprintf("%c", charcode & 0xff);
 		}
 		count = 0;
 	}
@@ -726,6 +681,4 @@ void irq1_handler()
 			count = 2;
 		}
 	}
-	old_val = old_val_temp;
-	value_received = val;
 }

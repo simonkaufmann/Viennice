@@ -88,9 +88,10 @@ void idt_init()
 	asm volatile("sti");
 }
 
-void idt_set_entry(short int num, unsigned int offset, short int selector, char gate_type,
+void idt_set_entry(short int num, void *function, short int selector, char gate_type,
 				   char storage_segment, char descriptor_privilege_level, char present)
 {
+	unsigned int offset = (unsigned int)function;
 	idt[2 * num] = 0;
 	idt[2 * num + 1] = 0;
 	idt[2 * num] |= offset & 0xFFFF;

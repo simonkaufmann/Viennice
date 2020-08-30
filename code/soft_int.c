@@ -21,8 +21,8 @@
 #include "print.h"
 #include "os.h"
 
-int write_software_interrupt(int fd, int buf, int count);
-int read_software_interrupt(int fd, int buf, int count);
+static int write_software_interrupt(int fd, int buf, int count);
+static int read_software_interrupt(int fd, int buf, int count);
 
 int software_interrupt_80h(int syscall, int first, int second, int third, int fourth)
 {
@@ -34,19 +34,20 @@ int software_interrupt_80h(int syscall, int first, int second, int third, int fo
     {
         return read_software_interrupt(first, second, third);
     }
+    return SYSCALL_NOT_RECOGNIZED;
 }
 
-int write_software_interrupt(int fd, int buf, int count)
+static int write_software_interrupt(int fd, int buf, int count)
 {
     char char_buffer[count + 1];
     memcpy(char_buffer, (void *)buf, count);
     char_buffer[count] = 0;
 
-    printf(char_buffer);
+    kprintf(char_buffer);
     return 0;
 }
 
-int read_software_interrupt(int fd, int buf, int count)
+static int read_software_interrupt(int fd, int buf, int count)
 {
     return 0;
 }
