@@ -25,6 +25,7 @@
 #include "main.h"
 #include "interrupt.h"
 #include "gdt.h"
+#include "syscall.h"
 
 /* 
  * Assemble the file with the CFLAGS from Makefile and -S init.c
@@ -34,11 +35,6 @@
 
 #define CMOS_PORT_ADDRESS 0x70 /* IO-space address for the cmos-offset-addresses */
 #define CMOS_PORT_DATA 0x71	   /* IO-space address for the cmos-data */
-
-/* Function declarations */
-void print(const char *string);
-void println(const char *string);
-void print_int(int number);
 
 void init()
 {
@@ -80,7 +76,8 @@ void init()
 
 	printf("\n");
 
-	int80h(10, 1, 2, 3, 4);
+	char hallo[] = "Syscall Write Tested\n";
+	write(0, hallo, sizeof(hallo));
 
 	while (1)
 		;

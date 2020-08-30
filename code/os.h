@@ -1,6 +1,9 @@
 #ifndef OS_H
 #define OS_H
 
+#define SYSCALL_WRITE 0x01
+#define SYSCALL_READ 0x02
+
 void outl(short int address, int data);
 int inl(short int address);
 

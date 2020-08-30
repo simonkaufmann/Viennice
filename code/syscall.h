@@ -1,5 +1,5 @@
 /*
- *  soft_int.h - Declarations for Software interrupts
+ *  syscall.h - Declarations for user level syscalls
  *  Copyright (C) 2020  Simon Kaufmann, HeKa
  *
  *  This is free software: you can redistribute it and/or modify
@@ -16,9 +16,10 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SOFT_INT_H
-#define SOFT_INT_H
+#ifndef SYSCALL_H
+#define SYSCALL_H
 
-int software_interrupt_80h(int syscall, int first, int second, int third, int fourth);
+int write(int fd, char *buf, int count);
+int read(int fd, char *buf, int count);
 
 #endif

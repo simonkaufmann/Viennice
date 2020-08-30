@@ -17,9 +17,36 @@
  */
 
 #include "soft_int.h"
+#include "string.h"
 #include "print.h"
+#include "os.h"
 
-void software_interrupt_80h(int syscall, int first, int second, int third, int fourth)
+int write_software_interrupt(int fd, int buf, int count);
+int read_software_interrupt(int fd, int buf, int count);
+
+int software_interrupt_80h(int syscall, int first, int second, int third, int fourth)
 {
-    printf("Software Interrupt Syscall %d, fourth: %d\n", syscall, fourth);
+    if (syscall == SYSCALL_WRITE)
+    {
+        return write_software_interrupt(first, second, third);
+    }
+    if (syscall == SYSCALL_READ)
+    {
+        return read_software_interrupt(first, second, third);
+    }
+}
+
+int write_software_interrupt(int fd, int buf, int count)
+{
+    char char_buffer[count + 1];
+    memcpy(char_buffer, (void *)buf, count);
+    char_buffer[count] = 0;
+
+    printf(char_buffer);
+    return 0;
+}
+
+int read_software_interrupt(int fd, int buf, int count)
+{
+    return 0;
 }

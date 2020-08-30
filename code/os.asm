@@ -109,8 +109,8 @@ int80h:
 	pushl %esi
 	movl 8(%ebp), %eax	# Push syscall arguments
 	movl 12(%ebp), %ebx
-	movl 14(%ebp), %ecx
-	movl 16(%ebp), %edx
+	movl 16(%ebp), %ecx
+	movl 20(%ebp), %edx
 	movl 24(%ebp), %esi
 	int $0x80
 	add $20, %esp		#Pop syscall arguments
