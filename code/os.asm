@@ -113,7 +113,6 @@ int80h:
 	movl 20(%ebp), %edx
 	movl 24(%ebp), %esi
 	int $0x80
-	add $20, %esp		#Pop syscall arguments
 	popl %esi
 	popl %edx
 	popl %ecx
@@ -139,7 +138,7 @@ idt32:
 	popal
 	iret
 
-idt128:
+idt128:	# For software interrupt int 80h
 	pushal
 	pushfl
 	pushl %esi	# Parameters for int 80h: https://en.wikibooks.org/wiki/X86_Assembly/Interfacing_with_Linux under `via interrupt`
@@ -148,7 +147,7 @@ idt128:
 	pushl %ebx
 	pushl %eax
 	call software_interrupt_80h	# Return value will be in %eax according to stdcall which matches software interrupt convention
-	add $0x20, %esp
+	add $20, %esp
 	popfl
 	popal
 	iret
