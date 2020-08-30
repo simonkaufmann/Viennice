@@ -80,7 +80,7 @@ void init()
 
 	printf("\n");
 
-	int80h();
+	int80h(10, 1, 2, 3, 4);
 
 	while (1)
 		;

@@ -24,6 +24,8 @@
  * Multiboot specification: http://www.gnu.org/software/grub/manual/multiboot/multiboot.htm
  *
  * Mixing C and Assembly: https://courses.engr.illinois.edu/ece390/books/labmanual/c-prog-mixing.html
+ *
+ * Interrupt Registr Parameters (for int 80h): https://en.wikibooks.org/wiki/X86_Assembly/Interfacing_with_Linux
  */
 
 .section .text
@@ -99,7 +101,24 @@ inb:
 	ret
 
 int80h:
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ebx	# Save registers to restore, %eax not saved because it will contain return value
+	pushl %ecx
+	pushl %edx
+	pushl %esi
+	movl 8(%ebp), %eax	# Push syscall arguments
+	movl 12(%ebp), %ebx
+	movl 14(%ebp), %ecx
+	movl 16(%ebp), %edx
+	movl 24(%ebp), %esi
 	int $0x80
+	add $20, %esp		#Pop syscall arguments
+	popl %esi
+	popl %edx
+	popl %ecx
+	popl %ebx
+	popl %ebp
 	ret
 
 default_isr:
@@ -123,7 +142,13 @@ idt32:
 idt128:
 	pushal
 	pushfl
-	call software_interrupt_80h
+	pushl %esi	# Parameters for int 80h: https://en.wikibooks.org/wiki/X86_Assembly/Interfacing_with_Linux under `via interrupt`
+	pushl %edx
+	pushl %ecx
+	pushl %ebx
+	pushl %eax
+	call software_interrupt_80h	# Return value will be in %eax according to stdcall which matches software interrupt convention
+	add $0x20, %esp
 	popfl
 	popal
 	iret

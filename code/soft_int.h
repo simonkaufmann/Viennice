@@ -19,6 +19,6 @@
 #ifndef SOFT_INT_H
 #define SOFT_INT_H
 
-void software_interrupt_80h();
+void software_interrupt_80h(int syscall, int first, int second, int third, int fourth);
 
 #endif

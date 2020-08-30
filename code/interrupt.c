@@ -16,6 +16,10 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * Software interrupt register calling: https://en.wikibooks.org/wiki/X86_Assembly/Interfacing_with_Linux
+ */
+
 #include "stdint.h"
 #include "interrupt.h"
 #include "os.h"
@@ -62,10 +66,11 @@ void idt_init()
 	{
 		idt_set_entry(i, default_isr_no_error, 0b1000, IDT_INTERRUPT_GATE_32_BIT, 0, 0, 1);
 	}
-	
+
 	idt_set_entry(128, idt128, 0b1000, IDT_INTERRUPT_GATE_32_BIT, 0, 0, 1);
 
-	for (i = 129; i < 256; i++) {
+	for (i = 129; i < 256; i++)
+	{
 		idt_set_entry(i, default_isr_no_error, 0b1000, IDT_INTERRUPT_GATE_32_BIT, 0, 0, 1);
 	}
 

@@ -19,7 +19,7 @@
 #include "soft_int.h"
 #include "print.h"
 
-void software_interrupt_80h()
+void software_interrupt_80h(int syscall, int first, int second, int third, int fourth)
 {
-    printf("Software Interrupt\n");
+    printf("Software Interrupt Syscall %d, fourth: %d\n", syscall, fourth);
 }

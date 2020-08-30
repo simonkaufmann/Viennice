@@ -7,7 +7,7 @@ int inl(short int address);
 void outb(unsigned short int address, unsigned char data);
 unsigned char inb(short int address);
 
-void int80h();
+int int80h(int syscall, int first, int second, int third, int fourth);
 
 extern int lidt_asm(void *);
 extern int gidt_asm(void *);
