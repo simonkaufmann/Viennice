@@ -139,17 +139,21 @@ idt32:
 	iret
 
 idt128:	# For software interrupt int 80h
-	pushal
+	pushl %ecx	# Push caller saved registers (cdecl)
+				# (they may be modified by functio software_interrupt_80h())
+				# except %eax which is used for return value
+	pushl %edx
 	pushfl
 	pushl %esi	# Parameters for int 80h: https://en.wikibooks.org/wiki/X86_Assembly/Interfacing_with_Linux under `via interrupt`
 	pushl %edx
 	pushl %ecx
 	pushl %ebx
 	pushl %eax
-	call software_interrupt_80h	# Return value will be in %eax according to stdcall which matches software interrupt convention
+	call software_interrupt_80h	# Return value will be in %eax according to cdecl which matches software interrupt convention
 	add $20, %esp
 	popfl
-	popal
+	popl %edx
+	popl %ecx
 	iret
 
 lidt_asm:

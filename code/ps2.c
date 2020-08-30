@@ -1,5 +1,6 @@
 /*
- *  ps2.c - ps2 driver for os Copyright (C) 2016  Simon Kaufmann, HeKa
+ *  ps2.c - ps2 driver for os
+ *  Copyright (C) 2016  Simon Kaufmann, HeKa
  *
  *  This is free software: you can redistribute it and/or modify it under the
  *  terms of the GNU General Public License as published by the Free Software
@@ -25,6 +26,7 @@
 #include "os.h"
 #include "print.h"
 #include "ps2.h"
+#include "char_buffer.h"
 #include "main.h"
 
 #define PS2_DATA 0x60
@@ -638,7 +640,7 @@ int keycode_char(int keycode)
 	char c = ascii_keyboard_uk[x2][x3 - 1][2 * (x4 - 1) + 1]; // Write comment here why we can't use the last array index, but have to do the multiplication!
 	if (ascii_keyboard_uk[x2][x3 - 1][2 * (x4 - 1)] == 0x01)
 	{
-		kprintf("Special Key!");
+		//kprintf("Special Key!");
 	}
 	return ((x1 << 24) | c);
 }
@@ -669,7 +671,11 @@ void irq1_handler()
 		if ((charcode & 0xff000000) == 0x80000000)
 		{
 			/* Key is pressed */
-			kprintf("%c", charcode & 0xff);
+			char character = charcode & 0xff;
+			if (buffer_add_character(character) != CHAR_BUFFER_SUCCESS)
+			{
+				kprintf("\n--ERROR: CHAR_BUFFER overflow--\n");
+			}
 		}
 		count = 0;
 	}

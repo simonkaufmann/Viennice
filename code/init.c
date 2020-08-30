@@ -26,6 +26,7 @@
 #include "interrupt.h"
 #include "gdt.h"
 #include "syscall.h"
+#include "char_buffer.h"
 
 /* 
  * Assemble the file with the CFLAGS from Makefile and -S init.c
@@ -46,7 +47,7 @@ void init()
 		"\n"
 		"     Experimental operating system for x86 systems\n"
 		"\n"
-		"     (c) Simon Kaufmann, 2019\n"
+		"     (c) Simon Kaufmann, 2020\n"
 		"\n"
 		"----------------------------------------------------------------------------\n";
 
@@ -80,5 +81,11 @@ void init()
 	write(0, hallo, sizeof(hallo));
 
 	while (1)
-		;
+	{
+		char buffer[1];
+		if (read(0, buffer, 1) > 0)
+		{
+			kprintf("%c", buffer[0]);
+		}
+	}
 }

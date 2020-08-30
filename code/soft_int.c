@@ -20,6 +20,7 @@
 #include "string.h"
 #include "print.h"
 #include "os.h"
+#include "char_buffer.h"
 
 static int write_software_interrupt(int fd, int buf, int count);
 static int read_software_interrupt(int fd, int buf, int count);
@@ -49,5 +50,5 @@ static int write_software_interrupt(int fd, int buf, int count)
 
 static int read_software_interrupt(int fd, int buf, int count)
 {
-    return 0;
+    return buffer_read_characters((void *)buf, count);
 }
