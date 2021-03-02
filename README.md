@@ -1,5 +1,8 @@
 # Viennice - x86-OS project
 
+<img src="doc/pictures/viennice.png" width="50%">
+<img src="doc/pictures/grub.png" width="50%">
+
 ## Quickstart
 
 Install packages (tested on Ubuntu 19.04):  
@@ -30,7 +33,4 @@ Look at doc/manual for instructions to create a bootable GRUB flash drive which 
 
 Interrupts, keyboard driver and text mode graphic driver are implemented
 
-## Pictures
 
-<img src="doc/pictures/viennice.png" width="50%">
-<img src="doc/pictures/grub.png" width="50%">
